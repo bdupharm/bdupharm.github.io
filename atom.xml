@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://blog.bodu.io/"/>
-  <updated>2016-04-12T17:01:49.000Z</updated>
+  <updated>2016-04-13T22:27:43.000Z</updated>
   <id>http://blog.bodu.io/</id>
   
   <author>
@@ -14,6 +14,30 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Unmasking Masked URL Redirect Records</title>
+    <link href="http://blog.bodu.io/2016/04/13/Unmasking-Masked-URL-Redirect-Records/"/>
+    <id>http://blog.bodu.io/2016/04/13/Unmasking-Masked-URL-Redirect-Records/</id>
+    <published>2016-04-13T22:20:52.000Z</published>
+    <updated>2016-04-13T22:27:43.000Z</updated>
+    
+    <content type="html">&lt;p&gt;TIL that a “masked” url redirect record in your DNS config most likely means your hosting provider is placing your website inside of an iframe. &lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/images/2016/04/masked_url_redirect.png&quot; alt=&quot;Masked URL Redirect Record&quot;&gt;&lt;/p&gt;
+&lt;p&gt;I noticed this because all of my &lt;code&gt;&amp;lt;meta&amp;gt;&lt;/code&gt; tags were missing and the page was not scaling appropriately on mobile devices due to a missing viewport meta tag.&lt;/p&gt;
+&lt;figure class=&quot;highlight html&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;tag&quot;&gt;&amp;lt;&lt;span class=&quot;name&quot;&gt;meta&lt;/span&gt; &lt;span class=&quot;attr&quot;&gt;name&lt;/span&gt;=&lt;span class=&quot;string&quot;&gt;&quot;viewport&quot;&lt;/span&gt; &lt;span class=&quot;attr&quot;&gt;content&lt;/span&gt;=&lt;span class=&quot;string&quot;&gt;&quot;width=device-width, initial-scale=1&quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;TIL that a “masked” url redirect record in your DNS config most likely means your hosting provider is placing your website inside of an i
+    
+    </summary>
+    
+    
+      <category term="dns, url masked url redirect record" scheme="http://blog.bodu.io/tags/dns-url-masked-url-redirect-record/"/>
+    
+  </entry>
   
   <entry>
     <title>Shellscript -e Flag &amp; Changing Run-time Parameters with Set</title>
