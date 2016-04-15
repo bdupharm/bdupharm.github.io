@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://blog.bodu.io/"/>
-  <updated>2016-04-14T15:02:27.000Z</updated>
+  <updated>2016-04-15T20:33:10.000Z</updated>
   <id>http://blog.bodu.io/</id>
   
   <author>
@@ -14,6 +14,34 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>SCP and SSH Without Entering a Password</title>
+    <link href="http://blog.bodu.io/2016/04/15/SCP-and-SSH-Without-Entering-a-Password/"/>
+    <id>http://blog.bodu.io/2016/04/15/SCP-and-SSH-Without-Entering-a-Password/</id>
+    <published>2016-04-15T20:15:50.000Z</published>
+    <updated>2016-04-15T20:33:10.000Z</updated>
+    
+    <content type="html">&lt;p&gt;Both &lt;code&gt;scp&lt;/code&gt; and &lt;code&gt;ssh&lt;/code&gt; prompt you for a password when trying to connect to a remote host. Here is how to do both without having to enter a password. &lt;/p&gt;
+&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
+&lt;p&gt;I’m going to assume that you know how ssh works and what private and public keys are for. Assume that &lt;strong&gt;localhost&lt;/strong&gt; means the machine running the scp/ssh command and &lt;strong&gt;remotehost&lt;/strong&gt; means the remote machine you are connecting/transferring files to.&lt;/p&gt;
+&lt;p&gt;If you do not already have a pair of private/public keys you want to use then generate a new set. Don’t forget to set valid permissions if you are creating a new key pair.&lt;br&gt;&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;$ ssh-keygen -t rsa&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;This will create a private key &lt;code&gt;~/.ssh/id_rsa&lt;/code&gt; and public key &lt;code&gt;~/.ssh/id_rsa.pub&lt;/code&gt; pair on your &lt;strong&gt;localhost&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;I like to configure things in my ssh config on my &lt;strong&gt;localhost&lt;/strong&gt;. I suggest you do so as well as it makes managing multiple key pairs and remote hosts easy. Edit your &lt;code&gt;~/.ssh/config&lt;/code&gt; file like so:&lt;br&gt;&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;Host sandbox&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;User kobebryant&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;HostName 192.168.56.101&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;IdentityFile ~/.ssh/id_rsa&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;Copy over the public key &lt;code&gt;id_rsa.pub&lt;/code&gt; to your &lt;strong&gt;remotehost&lt;/strong&gt; and add it to your &lt;code&gt;~/.ssh/authorized_keys&lt;/code&gt; file. Make sure to set valid permissions.&lt;br&gt;&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;$ cat id_rsa.pub &amp;gt;&amp;gt; ~/.ssh/authorized_keys&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;$ chmod 700 ~/.ssh/authorized_keys&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;That’s it, you can now scp/ssh without entering a password.&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;Both &lt;code&gt;scp&lt;/code&gt; and &lt;code&gt;ssh&lt;/code&gt; prompt you for a password when trying to connect to a remote host. Here is how to do both without having to enter a password. &lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="scp, ssh, passwordless" scheme="http://blog.bodu.io/tags/scp-ssh-passwordless/"/>
+    
+  </entry>
   
   <entry>
     <title>Don&#39;t Use Masked URL Redirect Records, Use CNAME Instead</title>
