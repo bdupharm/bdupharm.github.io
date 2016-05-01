@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://blog.bodu.io/"/>
-  <updated>2016-04-16T02:09:59.000Z</updated>
+  <updated>2016-05-01T21:03:00.479Z</updated>
   <id>http://blog.bodu.io/</id>
   
   <author>
@@ -16,11 +16,67 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>Zope Transaction Manager Not Committing Your Changes? Try Marking the Session as Dirty</title>
+    <link href="http://blog.bodu.io/2016/04/24/Zope-Transaction-Manager-Not-Committing-Your-Changes-Try-Marking-the-Session-as-Dirty/"/>
+    <id>http://blog.bodu.io/2016/04/24/Zope-Transaction-Manager-Not-Committing-Your-Changes-Try-Marking-the-Session-as-Dirty/</id>
+    <published>2016-04-24T23:08:52.000Z</published>
+    <updated>2016-05-01T21:03:00.479Z</updated>
+    
+    <content type="html">&lt;p&gt;If you’re reading this post, then you are likely familiar with the &lt;code&gt;Pyramid&lt;/code&gt; python web framework, the zope transaction manager (zope tm) and &lt;code&gt;SQLAlchemy&lt;/code&gt;.&lt;br&gt;The zope tm is smart enough to know when your session is dirty most of the time. But what if you want to execute raw SQL directly? The zope tm will not know that the session is dirty and will not commit your changes.&lt;/p&gt;
+&lt;p&gt;Solution? Manually mark the session as dirty when you execute raw SQL yourself.&lt;/p&gt;
+&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
+&lt;p&gt;Let’s say you have a database session object like this:&lt;br&gt;&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;session = scoped_session(sessionmaker())&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;And you have code written like this:&lt;br&gt;&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;# Using the ORM&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;# Zope tm knows whatsup. Your changes are committed.&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;user = model.User(first_name=&lt;span class=&quot;string&quot;&gt;&quot;Kanye&quot;&lt;/span&gt;,&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                  last_name=&lt;span class=&quot;string&quot;&gt;&quot;West&quot;&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;session.add(user)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;# Execute a raw SQL statement&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;# Zope tm has no idea wtf your doing. Your changes are not committed.&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;session.execute(&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    model.User.__table__.insert()&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;comment&quot;&gt;# first name, last name &lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        .values((&lt;span class=&quot;string&quot;&gt;&quot;kanye&quot;&lt;/span&gt;, &lt;span class=&quot;string&quot;&gt;&quot;west&quot;&lt;/span&gt;))&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;)&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;In the second example, you need to mark the session as dirty in order for zope tm to commit the transaction.&lt;br&gt;&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;from&lt;/span&gt; zope.sqlalchemy &lt;span class=&quot;keyword&quot;&gt;import&lt;/span&gt; mark_changed&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;mark_changed(session())&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;Make sure you call &lt;code&gt;mark_changed&lt;/code&gt; on the actual &lt;code&gt;session&lt;/code&gt; object and not the &lt;code&gt;scoped_session&lt;/code&gt; object or you will get an error like this:&lt;br&gt;&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;# dropped a debugger in my application&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;ipdb&amp;gt; session()&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;lt;sqlalchemy.orm.session.Session object at &lt;span class=&quot;number&quot;&gt;0x7f0bb46a4a50&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;ipdb&amp;gt; session&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;lt;sqlalchemy.orm.scoping.scoped_session object at &lt;span class=&quot;number&quot;&gt;0x7996590&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;ipdb&amp;gt; mark_changed(session)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;*** AttributeError: &lt;span class=&quot;string&quot;&gt;&#39;scoped_session&#39;&lt;/span&gt; object has no attribute &lt;span class=&quot;string&quot;&gt;&#39;twophase&#39;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;If you’re reading this post, then you are likely familiar with the &lt;code&gt;Pyramid&lt;/code&gt; python web framework, the zope transaction manager (zope tm) and &lt;code&gt;SQLAlchemy&lt;/code&gt;.&lt;br&gt;The zope tm is smart enough to know when your session is dirty most of the time. But what if you want to execute raw SQL directly? The zope tm will not know that the session is dirty and will not commit your changes.&lt;/p&gt;
+&lt;p&gt;Solution? Manually mark the session as dirty when you execute raw SQL yourself.&lt;/p&gt;
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Casting in PostgreSQL: A Shallow Wade Through Comparisons</title>
+    <link href="http://blog.bodu.io/2016/04/21/Casting-in-PostgreSQL-A-Shallow-Wade-Through-Comparisons/"/>
+    <id>http://blog.bodu.io/2016/04/21/Casting-in-PostgreSQL-A-Shallow-Wade-Through-Comparisons/</id>
+    <published>2016-04-21T15:35:05.000Z</published>
+    <updated>2016-05-01T21:02:18.575Z</updated>
+    
+    <content type="html">&lt;p&gt;Ever wondered how postgres is performing a comparison in a query like this:&lt;br&gt;&lt;figure class=&quot;highlight&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;db=# select relname, oid from pg_class where oid = &#39;pg_cast&#39;::regclass;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt; relname | oid&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;---------+------&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt; pg_cast | 2605&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;(1 row)&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;oid&lt;/code&gt; is not the same type as &lt;code&gt;regclass&lt;/code&gt;… so how is postgres handling this comparison (and others)? &lt;/p&gt;
+&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
+&lt;p&gt;First, we want to query the &lt;code&gt;pg_type&lt;/code&gt; table to find the oids of both the &lt;code&gt;oid&lt;/code&gt; and &lt;code&gt;regclass&lt;/code&gt; types. We need their oids to locate the relevant records on the &lt;code&gt;pg_cast&lt;/code&gt; table.&lt;br&gt;&lt;figure class=&quot;highlight&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;db=# select typname, oid from pg_type where typname ~ &#39;^oid$|^regclass$&#39;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt; typname  | oid&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;----------+------&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt; oid      |   26&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt; regclass | 2205&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;(2 rows)&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;Next, we want to query the &lt;code&gt;pg_cast&lt;/code&gt; table.&lt;br&gt;&lt;figure class=&quot;highlight&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;db=# select * from pg_cast where castsource in (26, 2205) and casttarget in (2205, 26);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt; castsource | casttarget | castfunc | castcontext | castmethod&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;------------+------------+----------+-------------+------------&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;         26 |       2205 |        0 | i           | b&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;       2205 |         26 |        0 | i           | b&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;(2 rows)&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;Now we see that there is implicit casting (&lt;code&gt;castcontext&lt;/code&gt; value of i) between the types going both ways.&lt;/p&gt;
+&lt;p&gt;The &lt;code&gt;castfunc&lt;/code&gt; value of 0 means that this cast method does not require a function. Otherwise, we would query the &lt;code&gt;pg_proc&lt;/code&gt; table with the &lt;code&gt;oid&lt;/code&gt;, value of &lt;code&gt;castfunc&lt;/code&gt;, to figure out which function postgres is using.&lt;/p&gt;
+&lt;p&gt;Lastly, the &lt;code&gt;castmethod&lt;/code&gt; is b, which means that the types are “binary-coercible”. I am not sure if this is the correct interpretation, but it may mean that the raw bytes of the two types stay the same between castings. &lt;/p&gt;
+&lt;p&gt;If you’re ever curious about comparisons in postgres again, you can always poke around in the &lt;code&gt;pg_type&lt;/code&gt;, &lt;code&gt;pg_cast&lt;/code&gt; and &lt;code&gt;pg_proc&lt;/code&gt; tables to figure out what is happening behind the scenes.&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;Ever wondered how postgres is performing a comparison in a query like this:&lt;br&gt;&lt;figure class=&quot;highlight&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;db=# select relname, oid from pg_class where oid = &#39;pg_cast&#39;::regclass;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt; relname | oid&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;---------+------&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt; pg_cast | 2605&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;(1 row)&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;oid&lt;/code&gt; is not the same type as &lt;code&gt;regclass&lt;/code&gt;… so how is postgres handling this comparison (and others)? &lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="cast, casting, postgres, postgresql, sql" scheme="http://blog.bodu.io/tags/cast-casting-postgres-postgresql-sql/"/>
+    
+  </entry>
+  
+  <entry>
     <title>SCP and SSH Without Entering a Password</title>
     <link href="http://blog.bodu.io/2016/04/15/SCP-and-SSH-Without-Entering-a-Password/"/>
     <id>http://blog.bodu.io/2016/04/15/SCP-and-SSH-Without-Entering-a-Password/</id>
     <published>2016-04-15T20:15:50.000Z</published>
-    <updated>2016-04-16T02:09:59.000Z</updated>
+    <updated>2016-04-16T02:11:16.455Z</updated>
     
     <content type="html">&lt;p&gt;Both &lt;code&gt;scp&lt;/code&gt; and &lt;code&gt;ssh&lt;/code&gt; prompt you for a password when trying to connect to a remote host. Here is how to do both without having to enter a password. &lt;/p&gt;
 &lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
@@ -48,7 +104,7 @@
     <link href="http://blog.bodu.io/2016/04/14/Don-t-Use-Masked-URL-Redirect-Records-Use-CNAME-Instead/"/>
     <id>http://blog.bodu.io/2016/04/14/Don-t-Use-Masked-URL-Redirect-Records-Use-CNAME-Instead/</id>
     <published>2016-04-14T14:09:59.000Z</published>
-    <updated>2016-04-14T15:02:27.000Z</updated>
+    <updated>2016-04-14T15:02:27.747Z</updated>
     
     <content type="html">&lt;p&gt;A “masked” url redirect record in your DNS config most likely means your hosting provider is placing your website inside of an iframe. &lt;/p&gt;
 &lt;p&gt;&lt;img src=&quot;/images/2016/04/masked_url_redirect.png&quot; alt=&quot;Masked URL Redirect Record&quot;&gt;&lt;/p&gt;
@@ -78,7 +134,7 @@
     <link href="http://blog.bodu.io/2016/04/12/Shellscript-e-flag/"/>
     <id>http://blog.bodu.io/2016/04/12/Shellscript-e-flag/</id>
     <published>2016-04-12T14:42:19.000Z</published>
-    <updated>2016-04-12T17:01:49.000Z</updated>
+    <updated>2016-04-12T17:01:49.127Z</updated>
     
     <content type="html">&lt;p&gt;Let’s say you want to your shellscript to exit when a command fails (returns with a non-zero exit code). Just call the shell interpreter with -e flag.&lt;/p&gt;
 &lt;p&gt;For example, we have a script named gunit.sh.&lt;br&gt;&lt;figure class=&quot;highlight sh&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;#!/bin/sh -e&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;touch /root/nottoday&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;built_in&quot;&gt;echo&lt;/span&gt; Will not be executed&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
