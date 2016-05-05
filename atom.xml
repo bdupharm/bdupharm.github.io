@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://blog.bodu.io/"/>
-  <updated>2016-05-01T21:03:00.479Z</updated>
+  <updated>2016-05-05T19:12:38.255Z</updated>
   <id>http://blog.bodu.io/</id>
   
   <author>
@@ -14,6 +14,30 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Debugging Javascript in IE8</title>
+    <link href="http://blog.bodu.io/2016/05/05/Debugging-Javascript-in-IE8/"/>
+    <id>http://blog.bodu.io/2016/05/05/Debugging-Javascript-in-IE8/</id>
+    <published>2016-05-05T18:53:41.000Z</published>
+    <updated>2016-05-05T19:12:38.255Z</updated>
+    
+    <content type="html">&lt;p&gt;First time debugging javascript in IE8 today, here what I wish I knew going in:&lt;/p&gt;
+&lt;p&gt;When you select a DOM node/element in IE8 you get a useless representation of the object.&lt;br&gt;&lt;figure class=&quot;highlight javascript&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;// Assume that JQuery is loaded&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;// IE 8&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; $(&lt;span class=&quot;string&quot;&gt;&quot;div&quot;&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#123;...&amp;#125; &lt;span class=&quot;comment&quot;&gt;// &amp;lt; WTH IS THIS??&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;// Any sane console debugger&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; $(&lt;span class=&quot;string&quot;&gt;&quot;div&quot;&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;built_in&quot;&gt;Object&lt;/span&gt; &amp;#123; length: &lt;span class=&quot;number&quot;&gt;59&lt;/span&gt;, prevObject: &lt;span class=&quot;built_in&quot;&gt;Object&lt;/span&gt;, context: HTMLDocument → &lt;span class=&quot;number&quot;&gt;19409&lt;/span&gt;, selector: &lt;span class=&quot;string&quot;&gt;&quot;div&quot;&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;59&lt;/span&gt; more… &amp;#125; &lt;span class=&quot;comment&quot;&gt;// I can work with this&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
+&lt;p&gt;If you want to look at any of the methods or values on the object you have to type in the name of the variable into the &lt;code&gt;watch&lt;/code&gt; tab of the developer tools.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/images/2016/05/ie8_watch.png&quot; alt=&quot;IE8 Watch Tab&quot;&gt;&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;First time debugging javascript in IE8 today, here what I wish I knew going in:&lt;/p&gt;
+&lt;p&gt;When you select a DOM node/element in IE8 you get a useless representation of the object.&lt;br&gt;&lt;figure class=&quot;highlight javascript&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;// Assume that JQuery is loaded&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;// IE 8&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; $(&lt;span class=&quot;string&quot;&gt;&quot;div&quot;&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#123;...&amp;#125; &lt;span class=&quot;comment&quot;&gt;// &amp;lt; WTH IS THIS??&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;// Any sane console debugger&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; $(&lt;span class=&quot;string&quot;&gt;&quot;div&quot;&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;built_in&quot;&gt;Object&lt;/span&gt; &amp;#123; length: &lt;span class=&quot;number&quot;&gt;59&lt;/span&gt;, prevObject: &lt;span class=&quot;built_in&quot;&gt;Object&lt;/span&gt;, context: HTMLDocument → &lt;span class=&quot;number&quot;&gt;19409&lt;/span&gt;, selector: &lt;span class=&quot;string&quot;&gt;&quot;div&quot;&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;59&lt;/span&gt; more… &amp;#125; &lt;span class=&quot;comment&quot;&gt;// I can work with this&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+    
+    </summary>
+    
+    
+  </entry>
   
   <entry>
     <title>Zope Transaction Manager Not Committing Your Changes? Try Marking the Session as Dirty</title>
