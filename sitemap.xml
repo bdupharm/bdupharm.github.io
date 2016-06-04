@@ -9,13 +9,6 @@
   </url>
   
   <url>
-    <loc>http://blog.bodu.io/README.html</loc>
-    
-    <lastmod>2016-05-01T21:22:00.931Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://blog.bodu.io/2016/04/24/Zope-Transaction-Manager-Not-Committing-Your-Changes-Try-Marking-the-Session-as-Dirty/</loc>
     
     <lastmod>2016-05-01T21:03:00.479Z</lastmod>
