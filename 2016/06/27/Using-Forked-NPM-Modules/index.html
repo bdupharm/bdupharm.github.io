@@ -1,0 +1,27 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> Using Forked NPM Modules · A Pharmacist's Adventures in Software Engineering</title><meta name="description" content="Using Forked NPM Modules - Bo Du"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="short icon" href="/favicon.png"><link rel="stylesheet" href="/css/apollo.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600" type="text/css"></head><body><div class="wrap"><header><a href="/" class="logo-link"><img src="/favicon.png"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="/" target="_self" class="nav-list-link">BLOG</a></li><li class="nav-list-item"><a href="/archives/" target="_self" class="nav-list-link">ARCHIVE</a></li><li class="nav-list-item"><a href="https://www.linkedin.com/in/bo-du-pharmd-76b29371" target="_blank" class="nav-list-link">LINKEDIN</a></li><li class="nav-list-item"><a href="https://github.com/bdupharm" target="_blank" class="nav-list-link">GITHUB</a></li></ul></header><section class="container"><div class="post"><article class="post-block"><h1 class="post-title">Using Forked NPM Modules</h1><div class="post-info">Jun 27, 2016</div><div class="post-content"><p>You just forked an npm module you’ve been using for a while and you’re presented with two options. </p>
+<ol>
+<li>Wait for the maintainer of that module to merge your pull request</li>
+<li>Use the forked version in the meantime </li>
+</ol>
+<p>Ehhh, only yeezus knows when this guy is going to merge our PR… so let’s just use our forked version for the time being.</p>
+<a id="more"></a>
+<p>In most cases, using a forked module will be very easy. Just add the git url to <code>package.json</code>. See the NPM documentation <a href="https://docs.npmjs.com/files/package.json#git-urls-as-dependencies" target="_blank" rel="external">here</a>.<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"dependencies"</span>: &#123;</span><br><span class="line">    <span class="string">"boron"</span>: <span class="string">"git@github.com:truveris/boron.git"</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>BUT WAIT</strong>, what if the project’s author has a clever way of publishing his module to NPM? </p>
+<p>If you take a look at <a href="https://github.com/yuanyan/boron" target="_blank" rel="external">this</a> React.JS module and peer into the <code>gulpfile.js</code> and <code>.npmignore</code> files, you can see that this guy is not merely running <code>npm publish</code>. The author threw some custom build/publish code inside of a gulp task.</p>
+<p>To solve this, we ended up just running the build step, tarballing the result and saving the tarball within the project and editing<code>package.json</code> like so.</p>
+<pre><code class="javascript">{
+  <span class="string">"dependencies"</span>: {
+    <span class="string">"boron"</span>: <span class="string">"./some-folder/boron-fork.tar.gz"</span>
+  }
+}
+</code></pre>
+<p>Alternatively, you could host the tarball somewhere like AWS S3 and add in the url in <code>package.json</code>.</p>
+</div></article></div><div class="about-me"><img src="/portrait.jpg"><div class="description">Hi, I'm a software engineer and pharmacist currently working at Truveris, a health IT startup. At work, I focus on building the back-end infrastructure while weaving in and out of front-end projects.</div></div></section><footer><div class="paginator"><a href="/2016/05/05/Debugging-Javascript-in-IE8/" class="next">NEXT</a></div><div id="disqus_thread"></div><script>var disqus_shortname = 'bdupharm';
+var disqus_identifier = '2016/06/27/Using-Forked-NPM-Modules/';
+var disqus_title = 'Using Forked NPM Modules';
+var disqus_url = 'http://blog.bodu.io/2016/06/27/Using-Forked-NPM-Modules/';
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script><script id="dsq-count-scr" src="//bdupharm.disqus.com/count.js" async></script><div class="copyright"><p>© 2016 <a href="http://blog.bodu.io">Bo Du</a>, unless otherwise noted.</p></div></footer></div><script async src="//cdn.bootcss.com/mathjax/2.6.1/MathJax.js?config=TeX-MML-AM_CHTML"></script><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"UA-76488168-1",'auto');ga('send','pageview');</script></body></html>

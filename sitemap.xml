@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://blog.bodu.io/2016/06/27/Using-Forked-NPM-Modules/</loc>
+    
+    <lastmod>2016-06-27T22:08:30.411Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://blog.bodu.io/2016/05/05/Debugging-Javascript-in-IE8/</loc>
     
     <lastmod>2016-05-05T19:14:58.759Z</lastmod>
