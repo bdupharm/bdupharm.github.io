@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://blog.bodu.io/2016/07/12/Unable-to-Verify-IPhone-Developer-Apps/</loc>
+    
+    <lastmod>2016-07-12T14:20:13.547Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.bodu.io/2016/07/06/Write-a-Babel-Plugin-iin-5-Minutes/</loc>
+    
+    <lastmod>2016-07-12T14:07:31.499Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://blog.bodu.io/2016/06/27/Using-Forked-NPM-Modules/</loc>
     
     <lastmod>2016-06-27T22:08:30.411Z</lastmod>
